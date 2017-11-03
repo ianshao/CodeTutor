@@ -1,0 +1,28 @@
+body {
+  background: #24aecd;
+}
+
+.monster {
+  width: 190px;
+  height: 240px;
+  margin: 2% auto;
+  background: url('https://treehouse-code-samples.s3.amazonaws.com/CSS-DD/codepen/blog/monster.png') left center;
+  animation: play .8s steps(10) infinite;
+
+}
+
+.bird {
+  width: 50px;
+  height: 50px;
+  margin: 5% auto;
+  background: url('../images/sprite_1.png') left center;
+  animation: play 1.3s steps(15) infinite;
+}
+
+.ball {
+	animation-duration: 4s;
+}
+
+@keyframes play {
+    100% { background-position: -1900px; }
+}

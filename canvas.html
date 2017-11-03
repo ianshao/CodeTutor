@@ -1,0 +1,261 @@
+<html>
+  <head>
+    <title>Canvas Story Board</title>
+    <meta charset="UTF-8">
+    <!-- <script src="js/snap.svg.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
+  </head>
+
+<body>
+  <div class="row">
+    <div class="column" style="width:25%">
+      <button class="accordion">基本物件</button>
+      <div class="panel">
+        <a href="#" onclick="anim_0()" title="Draw circles and images">背景圖</a><br/>
+        <a href="#" onclick="anim_1()" title="Draw circles and images">各種幾何物件</a><br/>
+      </div>
+
+      <button class="accordion">基本動畫</button>
+      <div class="panel">
+          <a href="#" onclick="anim_2()" title="Animate Element Group">簡單動畫(OK)</a><br/>
+          <a href="#" onclick="anim_4()" title="Add an image after 2 seconds">連續動畫(1)(OK)</a><br/>
+          <a href="#" onclick="anim_8()" title="連續動畫，切換精靈">連續動畫(2)(OK)</a><br/>
+          <a href="#" onclick="anim_5()" title="Add an image after 2 seconds">Ball Rolling(OK)</a><br/>
+          <a href="#" onclick="anim_7()" title="Add an image after 2 seconds">漫畫對話方塊(未完成)</a><br/>
+          <a href="#" onclick="anim_9()" title="Add an image after 2 seconds">蝴蝶飛(繞既定路線)(路徑不對)</a><br/>
+          <a href="#" onclick="anim_10()" title="以動畫方式產生宣告">宣布事項(OK)</a>
+      </div>
+
+      <button class="accordion">滑鼠事件</button>
+      <div class="panel">
+        <a href="#" onclick="anim_3()" title="Click event binding">Click 動畫(OK)</a><br/>
+        <a href="#" onclick="anim_6()" title="draw a path">畫線(OK)</a><br/>
+      </div>
+
+      <button class="accordion">SMIL動畫</button>
+      <div class="panel">
+        <a href="#">構思中</a><br/>
+        <a href="#">構思中</a><br/>
+      </div>
+    </div>
+    
+    <div class="column" style="width:72%">
+      <canvas id="myCanvas" width="800" height="600" style="border:1px solid #d3d3d3;">
+      Your browser does not support the HTML5 canvas tag.
+      </canvas>
+    </div>
+  </div>
+</body>
+
+<script>
+  var canvas = document.querySelector('#myCanvas');
+  var context = canvas.getContext('2d');
+  
+  function anim_0() { 
+  // Reference: https://www.simplifiedcoding.net/javascript-sprite-animation-tutorial-html5-canvas/
+     
+     var canvasWidth = 650; 
+     var canvasHeight = 350;
+     
+     //the with and height of our spritesheet
+     var spriteWidth = 864; 
+     var spriteHeight = 280; 
+     
+     //we are having two rows and 8 cols in the current sprite sheet
+     var rows = 2; 
+     var cols = 8; 
+     
+     //The 0th (first) row is for the right movement
+     var trackRight = 0; 
+     
+     //1st (second) row for the left movement (counting the index from 0)
+     var trackLeft = 1; 
+     
+     //To get the width of a single sprite we divided the width of sprite with the number of cols
+     //because all the sprites are of equal width and height 
+     var width = spriteWidth/cols; 
+     
+     //Same for the height we divided the height with number of rows 
+     var height = spriteHeight/rows; 
+     
+     //Each row contains 8 frame and at start we will display the first frame (assuming the index from 0)
+     var curFrame = 0; 
+     
+     //The total frame is 8 
+     var frameCount = 8; 
+     
+     //x and y coordinates to render the sprite 
+     var x=0;
+     var y=0; 
+     
+     //x and y coordinates of the canvas to get the single frame 
+     var srcX=0; 
+     var srcY=0; 
+     
+     //tracking the movement left and write 
+     var left = false;
+     //var left = true;
+     
+     //Assuming that at start the character will move right side 
+     var right = true;
+     //var right = false;
+     
+     //Speed of the movement 
+     var speed = 12; 
+     canvas.width = canvasWidth;
+     canvas.height = canvasHeight; 
+     
+     var ctx = canvas.getContext("2d");
+     
+     var character = new Image(); 
+     character.src = "images/sprite_2.png";
+     
+     function updateFrame(){
+       curFrame = ++curFrame % frameCount; 
+       srcX = curFrame * width; 
+       ctx.clearRect(x,y,width,height); 
+       
+       if(left && x>0){
+         srcY = trackLeft * height; 
+         x-=speed; 
+       }
+       if(right && x<canvasWidth-width){
+         srcY = trackRight * height; 
+         x+=speed; 
+       }
+     }
+     
+     function draw(){
+       updateFrame();
+       ctx.drawImage(character,srcX,srcY,width,height,x,y,width,height);
+     }
+     
+     
+     function moveLeft(){
+       left = true; 
+       right = false; 
+     }
+     
+     function moveRight(){
+       left = false;
+       right = true; 
+     }
+     
+     setInterval(draw,100);
+  }; // end of anim_0
+  
+  
+
+  function anim_1() { 
+     var canvasWidth = 800; 
+     var canvasHeight = 600;
+     
+     //the with and height of our spritesheet
+     var spriteWidth = 367; 
+     var spriteHeight = 202; 
+     
+     //we are having two rows and 8 cols in the current sprite sheet
+     var rows = 3; 
+     var cols = 5;
+     
+     //The 0th (first) row is for the right movement
+     var trackRight = 0; 
+     
+     //1st (second) row for the left movement (counting the index from 0)
+     var trackLeft = 1; 
+     
+     //To get the width of a single sprite we divided the width of sprite with the number of cols
+     //because all the sprites are of equal width and height 
+     var width = spriteWidth/cols; 
+     
+     //Same for the height we divided the height with number of rows 
+     var height = spriteHeight/rows; 
+     
+     //Each row contains 8 frame and at start we will display the first frame (assuming the index from 0)
+     var curFrame = 0; 
+     
+     //The total frame is 8 
+     var frameCount = 14; 
+     
+     //x and y coordinates to render the sprite 
+     var x=0;
+     var y=0; 
+     
+     //x and y coordinates of the canvas to get the single frame 
+     var srcX=0; 
+     var srcY=0; 
+     
+     //tracking the movement left and write 
+     var left = false;
+     //var left = true;
+     
+     //Assuming that at start the character will move right side 
+     var right = true;
+     //var right = false;
+     
+     //Speed of the movement 
+     var speed = 12; 
+     canvas.width = canvasWidth;
+     canvas.height = canvasHeight; 
+     
+     var ctx = canvas.getContext("2d");
+     
+     var character = new Image(); 
+     character.src = "images/sprite_1.png";
+     
+     function updateFrame(){
+       curFrame = ++curFrame % frameCount; 
+       srcX = curFrame * width; 
+       ctx.clearRect(x,y,width,height); 
+       /*
+       if(left && x>0){
+         srcY = trackLeft * height; 
+         x-=speed; 
+       }
+       if(right && x<canvasWidth-width){
+         srcY = trackRight * height; 
+         x+=speed; 
+       }
+       */
+     }
+     
+     function draw(){
+       updateFrame();
+       ctx.drawImage(character,srcX,srcY,width,height,x,y,width,height);
+     }
+     
+     
+     function moveLeft(){
+       left = true; 
+       right = false; 
+     }
+     
+     function moveRight(){
+       left = false;
+       right = true; 
+     }
+     
+     setInterval(draw,100);
+  };
+
+  // for css accordion only
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+
+  for (i = 0; i < acc.length; i++) {
+      acc[i].onclick = function(){
+          /* Toggle between adding and removing the "active" class,
+          to highlight the button that controls the panel */
+          this.classList.toggle("active");
+
+          /* Toggle between hiding and showing the active panel */
+          var panel = this.nextElementSibling;
+          if (panel.style.display === "block") {
+              panel.style.display = "none";
+          } else {
+              panel.style.display = "block";
+          }
+      }
+  }
+</script>
+</html>

@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>Canvas Story Board</title>
+    <meta charset="UTF-8">
+    <!-- <script src="js/snap.svg.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="css/mycssstyle.css">
+    <link rel="stylesheet" type="text/css" href="css/mystyle.css">
+  </head>
+
+<body>
+  <div class="row">
+    <div class="column" style="width:25%">
+      <button class="accordion">基本物件</button>
+      <div class="panel">
+        <a href="#" onclick="anim_0()" title="Draw circles and images">CSS Sprite 動畫</a><br/>
+        <a href="#" onclick="anim_1()" title="Draw circles and images">各種幾何物件</a><br/>
+      </div>
+
+      <button class="accordion">基本動畫</button>
+      <div class="panel">
+          <a href="#" onclick="anim_2()" title="Animate Element Group">簡單動畫(OK)</a><br/>
+          <a href="#" onclick="anim_4()" title="Add an image after 2 seconds">連續動畫(1)(OK)</a><br/>
+          <a href="#" onclick="anim_8()" title="連續動畫，切換精靈">連續動畫(2)(OK)</a><br/>
+          <a href="#" onclick="anim_5()" title="Add an image after 2 seconds">Ball Rolling(OK)</a><br/>
+          <a href="#" onclick="anim_7()" title="Add an image after 2 seconds">漫畫對話方塊(未完成)</a><br/>
+          <a href="#" onclick="anim_9()" title="Add an image after 2 seconds">蝴蝶飛(繞既定路線)(路徑不對)</a><br/>
+          <a href="#" onclick="anim_10()" title="以動畫方式產生宣告">宣布事項(OK)</a>
+      </div>
+
+      <button class="accordion">滑鼠事件</button>
+      <div class="panel">
+        <a href="#" onclick="anim_3()" title="Click event binding">Click 動畫(OK)</a><br/>
+        <a href="#" onclick="anim_6()" title="draw a path">畫線(OK)</a><br/>
+      </div>
+
+      <button class="accordion">SMIL動畫</button>
+      <div class="panel">
+        <a href="#">構思中</a><br/>
+        <a href="#">構思中</a><br/>
+      </div>
+    </div>
+    
+    <div id="main" class="column" style="width:72%">
+     <!-- <div class="monster"></div> -->
+    </div>
+  </div>
+</body>
+
+<script>
+  function anim_0() {
+    // Reference: http://blog.teamtreehouse.com/css-sprite-sheet-animations-steps
+    var main = document.querySelector('#main');
+    main.innerHTML = '<div class="monster"></div>';
+  }
+
+    function anim_1() {
+    // Reference: http://blog.teamtreehouse.com/css-sprite-sheet-animations-steps
+    var main = document.querySelector('#main');
+    main.innerHTML = '<div class="ball"><img src="images/basketballg.gif" style="position:absolute;left:300px;top:100px" height="100" width="100"/></div>';
+  }
+
+  // for css accordion only
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+
+  for (i = 0; i < acc.length; i++) {
+      acc[i].onclick = function(){
+          /* Toggle between adding and removing the "active" class,
+          to highlight the button that controls the panel */
+          this.classList.toggle("active");
+
+          /* Toggle between hiding and showing the active panel */
+          var panel = this.nextElementSibling;
+          if (panel.style.display === "block") {
+              panel.style.display = "none";
+          } else {
+              panel.style.display = "block";
+          }
+      }
+  }
+</script>
+</html>
