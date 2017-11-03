@@ -22,13 +22,14 @@
           <a href="#" onclick="anim_5()" title="Add an image after 2 seconds">Ball Rolling(OK)</a><br/>
           <a href="#" onclick="anim_7()" title="Add an image after 2 seconds">漫畫對話方塊(未完成)</a><br/>
           <a href="#" onclick="anim_9()" title="Add an image after 2 seconds">蝴蝶飛(繞既定路線)(路徑不對)</a><br/>
+          <a href="#" onclick="anim_11()" title="zoom-in background">背景圖動畫</a><br/>
           <a href="#" onclick="anim_10()" title="以動畫方式產生宣告">宣布事項(OK)</a>
       </div>
 
       <button class="accordion">滑鼠事件</button>
       <div class="panel">
         <a href="#" onclick="anim_3()" title="Click event binding">Click 動畫(OK)</a><br/>
-        <a href="#" onclick="anim_6()" title="draw a path">畫線(OK)</a><br/>
+        <a href="#" onclick="anim_6()" title="draw a path">畫線 + 蝴蝶飛</a><br/>
       </div>
 
       <button class="accordion">SMIL動畫</button>
@@ -47,6 +48,7 @@
 
 <script>
   var s = Snap("#stage"); 
+  var svg = document.querySelector("#stage");
 
   var dummy = s.rect(0,0,10,10,20,20).attr({ opacity: 0 });
 
@@ -154,32 +156,104 @@
 
   function anim_6() { 
   // 畫第二條線時，前面的會消失，已修改，但是滑鼠位置不對(已修正，用 offsetX, offsetY, 而不是 clientX, clientY, or pageX, PageY)
+    var imgWidth = 50;
+    var imgHeight = 50;
+    var pathD = "";
+    var aniD = "";
     clearPaper();
-
-    //console.log("pathID = "+pathID);
+    var image1 = s.g().image("images/garden-2.jpg", 0,0, 800,600 );
+    //document.getElementById('stage').style.backgroundImage = "url(images/garden.jpg)";
+    //console.log(svg);
+    
     s.mousedown(function (e) {
-      var pathID = Math.floor((Math.random() * 10) + 1);
-      var drawPath = s.path().attr({ 'stroke': '#123456', 'strokeWidth': 1,'fill':'none'
-  });
-      var drawPath2 = s.path("M10 10 L10.1 10.1").attr({ 'stroke': '#123456', 'strokeWidth': 1,'fill':'none'});
 
+      if (document.querySelector("#myImage")) {
+        return 0;
+      }
+      //clearPaper();
+      //先把蝴蝶叫出來
+      //再畫路徑
+      var path = document.createElementNS('http://www.w3.org/2000/svg',"path");
+      path.setAttribute("id", "theMotionPath");  
+      path.setAttribute("stroke", "black");
+      path.setAttribute("stroke-width", 1);
+      path.setAttribute("opacity", 1);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke-dasharray", "5, 5");
+     
       var startPX = e.offsetX;
       var startPY = e.offsetY;
-      var pathD = "M"+startPX+" "+startPY+" ";
+
+      //console.log("1 startX=" + startPX);
+      pathD = "M"+startPX+" "+startPY+" ";
+      aniD = "M" + (e.offsetX-imgWidth/2)+" "+(e.offsetY-imgHeight/2)+" ";
+      //var aniD = pathD;
+      path.setAttribute("d",pathD);
+      svg.appendChild(path);
+
       s.mousemove(function (e) {
-        //在這裡畫線
-        // console.log("滑鼠的X座標"+e.x);
-        // console.log("滑鼠的Y座標"+e.y);
-        pathD += "L"+e.offsetX+" "+e.offsetY+"";
-        //console.log(pathD);
-        //d += "M" + e.x + " " + e.y
-        drawPath.attr({"d":pathD});
-        // console.log("pathID = "+pathID);
-        // document.getElementById(pathID).setAttribute("d",pathD);
-        s.mouseup(function () {
-          drawPath.attr({"d":pathD});
+        pathD += "L"+e.offsetX+" "+e.offsetY+" ";
+        aniD += "L"+(e.offsetX-imgWidth/2)+" "+(e.offsetY-imgHeight/2)+" ";
+        path.setAttribute("d",pathD);
+      })
+
+      s.mouseup(function () {
+        //console.log("myImage = " + document.querySelector("#myImage"));
+        
+        if (document.querySelector("#myImage") == null) {
+          var svgimg = document.createElementNS("http://www.w3.org/2000/svg", "image");
+          svgimg.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', "images/bee.gif");
+          svgimg.setAttributeNS(null,'id',"myImage");
+          svgimg.setAttributeNS(null,'height',imgHeight);
+          svgimg.setAttributeNS(null,'width',imgWidth);
+          svgimg.setAttributeNS(null,'x',0);
+          svgimg.setAttributeNS(null,'y',0);
+
+          path.setAttribute("opacity", 0.01);
+          //svgimg.setAttributeNS(null,'opacity',0.2);
+
+          path.setAttribute("d",pathD);
+          //svg.appendChild(path);
           s.unmousemove();
-        })
+          // add start button
+          var myrect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          myrect.setAttributeNS(null,'id',"startButton");
+          myrect.setAttributeNS(null,'x',"10");
+          myrect.setAttributeNS(null,'y',"20");
+          myrect.setAttributeNS(null,'width',"80");
+          myrect.setAttributeNS(null,'height',"25");
+          myrect.setAttributeNS(null,'rx',"5");
+          myrect.setAttributeNS(null,'fill',"#EFEFEF");
+          svg.appendChild(myrect);
+
+          /*
+          <rect id="startButton" style="cursor:pointer;"
+            x="19.5" y="62.5" rx="5" height="25" width="80"
+            fill="#EFEFEF" stroke="black" stroke-width="1" />
+  
+          <text x="60" y="80" text-anchor="middle"
+            style="pointer-events:none;">Click me.</text>
+        */
+          //要記錄線的path
+          //console.log("path的D = "+drawPath.attr("d"));
+          
+          var ani = document.createElementNS("http://www.w3.org/2000/svg","animateMotion");
+          ani.setAttribute("dur", "8s");
+          ani.setAttribute("begin", "startButton.click");
+          //ani.setAttribute("repeatCount", "indefinite");
+          ani.setAttribute("rotate", "auto");
+          ani.setAttribute("fill", "freeze");
+
+          //console.log(svg);
+          //因為基準點的不同，所以不能直接使用path的D來當蝴蝶的路徑
+          ani.setAttribute("path",aniD);
+          svgimg.appendChild(ani);
+          svg.appendChild(svgimg);
+        } else {
+          //如果蝴蝶已經存在了，則修改蝴蝶的位置
+          //document.querySelector("#myImage").setAttributeNS(null,'x',startPX - imgWidth /2);
+          //document.querySelector("#myImage").setAttributeNS(null,'y',startPY - imgHeight /2);
+        }
       })
     })
   };
@@ -199,13 +273,10 @@
     var g2 = s.group(image2, dummy); 
 
     var anim0 = function() {
-      console.log("anim0");
       g1.animate({ transform: 't200,0' }, 1000, mina.linear, anim1);
     };
 
     var anim1 = function() {
-      console.log("anim1");
-
       image2.attr({opacity:1.0});
       g2.animate({ transform: 't-10,220' }, 1000, mina.linear, anim2);
       //anim2();
@@ -213,7 +284,6 @@
     };
 
     var anim2 = function() {
-      console.log("anim2");
       g2.animate({ transform: 't100,-10' }, 1000, mina.linear);
       //triangle.animate({'transform' : 'r90,200,200 T400,300','fillOpacity':0}, 3000, mina.linear, anim1);
     };
@@ -224,9 +294,14 @@
     clearPaper();
     // 產生一個 image
         var svg = document.querySelector("#stage");
+
+        if (document.querySelector("#myImage")) {
+
+        }
         var svgimg = document.createElementNS("http://www.w3.org/2000/svg", "image");
 
         svgimg.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', "images/butterfly-2.gif");
+        svgimg.setAttributeNS(null,'id','myImage');
         svgimg.setAttributeNS(null,'height','50');
         svgimg.setAttributeNS(null,'width','50');
         svgimg.setAttributeNS(null,'x','10');
@@ -276,7 +351,6 @@
     var len = textArray.length;
 
     console.log(len);
-
     
     var timing = 2050; // 可以設為參數
 
@@ -301,9 +375,17 @@
 
   };
 
+  function anim_11() {
+    clearPaper();
+    // 先放背景圖
+    var BG = s.g().image("images/zoomInBackground.png", -50, -50, 1024,768);
+    BG.transform("T-20 -20");
+  }
+
   function clearPaper() {
-    var myNode = document.getElementById("stage");
+    var myNode = document.querySelector("#stage");
     myNode.innerHTML = '';
+    console.log(svg);
   };
 
 
